@@ -30,11 +30,8 @@ import ru.tdrykova.notesappmvvm.navigation.NavRoute
 import ru.tdrykova.notesappmvvm.ui.theme.NotesAppMVVMTheme
 
 @Composable
-fun MainScreen(navController: NavController) {
-    val context = LocalContext.current
-    val mViewModel: MainViewModel =
-        viewModel(factory = MainViewModelFactory(context.applicationContext as Application))
-
+fun MainScreen(navController: NavController, viewModel: MainViewModel) {
+    val notes = viewModel.readAllNotes().observeAsState(listOf()).value
 //    val notes = mViewModel.readTest.observeAsState(listOf()).value
     Scaffold(
         floatingActionButton = {
@@ -50,18 +47,11 @@ fun MainScreen(navController: NavController) {
             }
         }
     ) {
-//        Column() {
-//            NoteItem("Note 1", "Subtitle 1", navController = navController)
-//            NoteItem("Note 2", "Subtitle 2", navController = navController)
-//            NoteItem("Note 3", "Subtitle 3", navController = navController)
-//            NoteItem("Note 4", "Subtitle 4", navController = navController)
-//        }
-
-//        LazyColumn {
-//            items(notes) { note ->
-//                NoteItem(note = note, navController = navController)
-//            }
-//        }
+        LazyColumn {
+            items(notes) { note ->
+                NoteItem(note = note, navController = navController)
+            }
+        }
     }
 }
 
@@ -98,6 +88,10 @@ fun NoteItem(note: Note, navController: NavController) {
 @Composable
 fun prevMainScreen() {
     NotesAppMVVMTheme {
-        MainScreen(navController = rememberNavController())
+        val context = LocalContext.current
+        val mViewModel: MainViewModel =
+            viewModel(factory = MainViewModelFactory(context.applicationContext as Application))
+
+        MainScreen(navController = rememberNavController(), viewModel = mViewModel)
     }
 }

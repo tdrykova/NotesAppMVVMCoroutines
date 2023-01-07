@@ -1,5 +1,6 @@
 package ru.tdrykova.notesappmvvm.screens
 
+import android.app.Application
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Card
 import androidx.compose.material.Scaffold
@@ -7,16 +8,20 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import ru.tdrykova.notesappmvvm.MainViewModel
+import ru.tdrykova.notesappmvvm.MainViewModelFactory
 import ru.tdrykova.notesappmvvm.ui.theme.NotesAppMVVMTheme
 
 @Composable
-fun NoteScreen(navController: NavController) {
+fun NoteScreen(navController: NavController, viewModel: MainViewModel) {
     Scaffold(
         modifier = Modifier.fillMaxSize()
     ) {
@@ -55,6 +60,10 @@ fun NoteScreen(navController: NavController) {
 @Composable
 fun prevNoteScreen() {
     NotesAppMVVMTheme {
-        NoteScreen(navController = rememberNavController())
+        val context = LocalContext.current
+        val mViewModel: MainViewModel =
+            viewModel(factory = MainViewModelFactory(context.applicationContext as Application))
+
+        NoteScreen(navController = rememberNavController(), viewModel = mViewModel)
     }
 }
